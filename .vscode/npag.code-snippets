@@ -1,0 +1,16 @@
+{
+  "Create the base of a next page": {
+    "prefix": "npag",
+    "body": [
+      "import type { PageParams } from '@/types/next';",
+      "",
+      "const RoutePage = ({$1}: PageParams) => {",
+      "  return $2;",
+      "};",
+      "",
+      "export default RoutePage;",
+      "",
+    ],
+    "description": "Create the base of a next page",
+  },
+}
