@@ -9,8 +9,8 @@ type TimerStore = {
   AddTimer: (timer: TimerSchema) => void;
   RemoveTimer: (timerId: string) => void;
   CreateTimer: ({ duration }: { duration: moment.Duration }) => TimerSchema;
-  GetTimer: (timerId: string) => TimerSchema | null;
-  GetAllTimers: () => TimerSchema[];
+
+  TickTimers: () => void;
 };
 
 const timerMiddlewares = (f: StateCreator<TimerStore>) =>
@@ -32,6 +32,11 @@ export const useTimerStore = create<TimerStore>()(
       }));
     },
 
+    GetTimeLeft(timerId: string): number | null {
+      const timer = get().timers.find((timer) => timer.id === timerId);
+      return timer ? timer.timeLeft : null;
+    },
+
     GetTimer(timerId: string): TimerSchema | null {
       return get().timers.find((timer) => timer.id === timerId) || null;
     },
@@ -39,10 +44,11 @@ export const useTimerStore = create<TimerStore>()(
     CreateTimer({ duration }) {
       const timer: TimerSchema = {
         id: nanoid(11),
-        duration: duration,
-        timeLeft: duration,
-        endAt: moment().add(duration, 'milliseconds'),
-        isRunning: false,
+        name: `Timer ${get().timers.length + 1}`,
+        duration: duration.asMilliseconds(),
+        timeLeft: duration.asMilliseconds(),
+        endAt: moment().add(duration, 'milliseconds').toDate().getTime(),
+        isRunning: true,
       };
 
       get().AddTimer(timer);
@@ -50,8 +56,26 @@ export const useTimerStore = create<TimerStore>()(
       return timer;
     },
 
-    GetAllTimers(): TimerSchema[] {
-      return get().timers;
+    TickTimers() {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          const currentTime = moment();
+          const isTimeLeft = timer.timeLeft !== 0;
+          const isNotEnded = moment(timer.endAt + 1).isAfter(currentTime);
+          const shouldContinue = timer.isRunning && isTimeLeft && isNotEnded;
+
+          return shouldContinue
+            ? {
+                ...timer,
+                timeLeft: timer.timeLeft - 1000,
+              }
+            : {
+                ...timer,
+                timeLeft: 0,
+                isRunning: false,
+              };
+        }),
+      }));
     },
   }))
 );
