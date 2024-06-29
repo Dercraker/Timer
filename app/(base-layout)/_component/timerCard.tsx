@@ -81,22 +81,43 @@ export const TimerCard = ({
           <ActionIcon
             variant="outline"
             color="var(--mantine-color-red-5)"
-            onClick={() => RemoveTimer(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              RemoveTimer(id);
+            }}
           >
             <IconTrashX />
           </ActionIcon>
           <ActionIconGroup>
             {isRunning ? (
-              <ActionIcon variant="outline" onClick={() => PauseTimer(id)}>
+              <ActionIcon
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  PauseTimer(id);
+                }}
+              >
                 <IconPlayerPause />
               </ActionIcon>
             ) : (
-              <ActionIcon variant="outline" onClick={() => StartTimer(id)}>
+              <ActionIcon
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  StartTimer(id);
+                }}
+              >
                 <IconPlayerPlay />
               </ActionIcon>
             )}
 
-            <ActionIcon variant="outline" onClick={() => RestartTimer(id)}>
+            <ActionIcon
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation();
+                RestartTimer(id);
+              }}
+            >
               <IconRepeat />
             </ActionIcon>
           </ActionIconGroup>

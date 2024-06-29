@@ -9,6 +9,7 @@ type TimerStore = {
   AddTimer: (timer: TimerSchema) => void;
   RemoveTimer: (timerId: string) => void;
   CreateTimer: ({ duration }: { duration: moment.Duration }) => TimerSchema;
+  GetTimer: (timerId: string) => TimerSchema | null;
 
   TickTimers: () => void;
   PauseTimer: (timerId: string) => void;
@@ -34,11 +35,6 @@ export const useTimerStore = create<TimerStore>()(
       set((state) => ({
         timers: state.timers.filter((timer) => timer.id !== timerId),
       }));
-    },
-
-    GetTimeLeft(timerId: string): number | null {
-      const timer = get().timers.find((timer) => timer.id === timerId);
-      return timer ? timer.timeLeft : null;
     },
 
     GetTimer(timerId: string): TimerSchema | null {
