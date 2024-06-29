@@ -40,7 +40,7 @@ export const ClockIcon = ({
     <ActionIcon
       variant="transparent"
       onMouseEnter={!isHover ? openHover : () => {}}
-      onMouseLeave={closeHover}
+      onMouseLeave={() => closeHover}
       onClick={onClick}
       disabled={disabled}
     >

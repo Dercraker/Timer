@@ -5,8 +5,8 @@ import { SiteConfig } from '@/utils/site-config';
 import type { MantineBreakpoint } from '@mantine/core';
 import { Box, Group, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconClock } from '@tabler/icons-react';
 import Link from 'next/link';
-import { ClockIcon } from '../icons/clockIcon';
 
 export type SiteNameProps = {
   nameVisibleFrom?: MantineBreakpoint;
@@ -30,11 +30,7 @@ export const SiteName = ({
       onMouseLeave={closeHoverClock}
     >
       <Group gap="xs">
-        <ClockIcon
-          size={logoSize}
-          isHover={hovered}
-          colorize="var(--mantine-color-text)"
-        />
+        <IconClock />
         <Title
           ta="center"
           order={3}
