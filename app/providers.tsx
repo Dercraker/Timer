@@ -3,14 +3,14 @@ import { env } from '@/lib/env/server';
 import { themes } from '@/styles/themes';
 import { MantineBreakpointIndicator } from '@/utils/MantineBreakpointIndicator';
 import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/core/styles.layer.css';
 import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { PropsWithChildren } from 'react';
 import './globals.scss';
-// import '@mantine/core/styles.css';
-import '@mantine/core/styles.layer.css';
-import '@mantine/notifications/styles.css';
 
 export const Providers = ({ children }: PropsWithChildren) => {
   return (
