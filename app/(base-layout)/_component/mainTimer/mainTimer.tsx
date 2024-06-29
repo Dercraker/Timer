@@ -56,15 +56,13 @@ export const MainTimer = ({}: MainTimerProps) => {
   return (
     <Group justify="center">
       <Stack>
-        <Group>
+        <Group pb="xs">
           <NumberInput
             label={timerForm.values.hour > 0 ? 'Hours' : 'Hour'}
             min={0}
-            suffix=" h"
             allowDecimal={false}
             thousandSeparator=" "
             hideControls
-            defaultValue={0}
             classNames={{ label: styles.label, input: styles.input }}
             {...timerForm.getInputProps('hour')}
             rightSection={
@@ -80,11 +78,9 @@ export const MainTimer = ({}: MainTimerProps) => {
             label={timerForm.values.minute > 0 ? 'Minutes' : 'Minute'}
             min={0}
             max={59}
-            suffix=" m"
             allowDecimal={false}
             thousandSeparator=" "
             hideControls
-            defaultValue={0}
             classNames={{ label: styles.label, input: styles.input }}
             {...timerForm.getInputProps('minute')}
             rightSection={
@@ -100,11 +96,9 @@ export const MainTimer = ({}: MainTimerProps) => {
             label={timerForm.values.second > 0 ? 'Seconds' : 'Second'}
             min={0}
             max={59}
-            suffix=" s"
             allowDecimal={false}
             thousandSeparator=" "
             hideControls
-            defaultValue={0}
             classNames={{ label: styles.label, input: styles.input }}
             {...timerForm.getInputProps('second')}
             rightSection={

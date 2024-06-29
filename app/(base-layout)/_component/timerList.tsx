@@ -25,11 +25,7 @@ export const TimerList = ({}: TimerListProps) => {
   return (
     <Group align="center" justify="center">
       {allTimers.map((timer) => (
-        <TimerCard
-          key={timer.id}
-          timer={timer}
-          onClick={() => RemoveTimer(timer.id)}
-        />
+        <TimerCard key={timer.id} timer={timer} />
       ))}
     </Group>
   );

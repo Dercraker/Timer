@@ -11,6 +11,10 @@ type TimerStore = {
   CreateTimer: ({ duration }: { duration: moment.Duration }) => TimerSchema;
 
   TickTimers: () => void;
+  PauseTimer: (timerId: string) => void;
+  StartTimer: (timerId: string) => void;
+  ReloadEndAt: (timerId: string) => void;
+  RestartTimer: (timerId: string) => void;
 };
 
 const timerMiddlewares = (f: StateCreator<TimerStore>) =>
@@ -71,9 +75,65 @@ export const useTimerStore = create<TimerStore>()(
               }
             : {
                 ...timer,
-                timeLeft: 0,
                 isRunning: false,
               };
+        }),
+      }));
+    },
+
+    PauseTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, isRunning: false };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    StartTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, isRunning: true };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    ReloadEndAt(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return {
+              ...timer,
+              endAt: moment()
+                .add(timer.timeLeft, 'milliseconds')
+                .toDate()
+                .getTime(),
+            };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    RestartTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return {
+              ...timer,
+              timeLeft: timer.duration,
+              endAt: moment()
+                .add(timer.duration, 'milliseconds')
+                .toDate()
+                .getTime(),
+            };
+          }
+          return timer;
         }),
       }));
     },
