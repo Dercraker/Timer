@@ -1,16 +1,18 @@
 'use client';
 
+import { useTimerStore } from '@/store/timerStore';
 import { Button, Group, NumberInput, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconTrashX } from '@tabler/icons-react';
 import { zodResolver } from 'mantine-form-zod-resolver';
+import moment from 'moment';
 import styles from './mainTimer.module.css';
-import { TimerSchema } from './timer.schema';
+import { TimerInputSchema } from './timerInput.schema';
 
 export type MainTimerProps = {};
 
 export const MainTimer = ({}: MainTimerProps) => {
-  const timerForm = useForm<TimerSchema>({
+  const timerForm = useForm<TimerInputSchema>({
     mode: 'controlled',
     initialValues: {
       hour: 0,
@@ -18,7 +20,7 @@ export const MainTimer = ({}: MainTimerProps) => {
       second: 0,
     },
     validateInputOnChange: true,
-    validate: zodResolver(TimerSchema),
+    validate: zodResolver(TimerInputSchema),
   });
 
   const isTimeZero = () =>
@@ -39,6 +41,17 @@ export const MainTimer = ({}: MainTimerProps) => {
       minute: 0,
       second: 0,
     });
+
+  const handleSaveTimer = () => {
+    const duration = moment.duration({
+      hours: timerForm.values.hour,
+      minutes: timerForm.values.minute,
+      seconds: timerForm.values.second,
+    });
+
+    useTimerStore.getState().CreateTimer({ duration });
+    handleResetAll();
+  };
 
   return (
     <Group justify="center">
@@ -120,6 +133,7 @@ export const MainTimer = ({}: MainTimerProps) => {
             disabled={!timerForm.isValid() || isTimeZero()}
             fullWidth
             flex={2}
+            onClick={handleSaveTimer}
           >
             Create Timer
           </Button>
