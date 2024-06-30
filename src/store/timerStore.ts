@@ -9,8 +9,16 @@ type TimerStore = {
   AddTimer: (timer: TimerSchema) => void;
   RemoveTimer: (timerId: string) => void;
   CreateTimer: ({ duration }: { duration: moment.Duration }) => TimerSchema;
+  GetTimer: (timerId: string) => TimerSchema | null;
 
   TickTimers: () => void;
+  PauseTimer: (timerId: string) => void;
+  StartTimer: (timerId: string) => void;
+  CalculateAllRealTimeLeft: () => void;
+  ReloadEndAt: (timerId: string) => void;
+  RestartTimer: (timerId: string) => void;
+
+  ChangeName: (timerId: string, newName: string) => void;
 };
 
 const timerMiddlewares = (f: StateCreator<TimerStore>) =>
@@ -30,11 +38,6 @@ export const useTimerStore = create<TimerStore>()(
       set((state) => ({
         timers: state.timers.filter((timer) => timer.id !== timerId),
       }));
-    },
-
-    GetTimeLeft(timerId: string): number | null {
-      const timer = get().timers.find((timer) => timer.id === timerId);
-      return timer ? timer.timeLeft : null;
     },
 
     GetTimer(timerId: string): TimerSchema | null {
@@ -59,21 +62,105 @@ export const useTimerStore = create<TimerStore>()(
     TickTimers() {
       set((state) => ({
         timers: state.timers.map((timer) => {
-          const currentTime = moment();
-          const isTimeLeft = timer.timeLeft !== 0;
-          const isNotEnded = moment(timer.endAt + 1).isAfter(currentTime);
-          const shouldContinue = timer.isRunning && isTimeLeft && isNotEnded;
+          const isTimeLeft = timer.timeLeft >= 0;
+          const shouldContinue = timer.isRunning && isTimeLeft;
 
           return shouldContinue
             ? {
                 ...timer,
                 timeLeft: timer.timeLeft - 1000,
               }
-            : {
-                ...timer,
-                timeLeft: 0,
-                isRunning: false,
-              };
+            : timer.timeLeft < 0
+              ? {
+                  ...timer,
+                  timeLeft: 0,
+                  isRunning: false,
+                }
+              : {
+                  ...timer,
+                  isRunning: false,
+                };
+        }),
+      }));
+    },
+
+    PauseTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, isRunning: false };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    StartTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, isRunning: true };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    CalculateAllRealTimeLeft() {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          const currentTime = moment();
+          const timeLeft = moment(timer.endAt).diff(
+            currentTime,
+            'milliseconds'
+          );
+          return { ...timer, timeLeft };
+        }),
+      }));
+    },
+
+    ReloadEndAt(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId && timer.timeLeft !== 0) {
+            return {
+              ...timer,
+              endAt: moment()
+                .add(timer.timeLeft, 'milliseconds')
+                .toDate()
+                .getTime(),
+            };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    RestartTimer(timerId) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return {
+              ...timer,
+              timeLeft: timer.duration,
+              endAt: moment()
+                .add(timer.duration, 'milliseconds')
+                .toDate()
+                .getTime(),
+            };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    ChangeName(timerId, newName) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, name: newName };
+          }
+          return timer;
         }),
       }));
     },
