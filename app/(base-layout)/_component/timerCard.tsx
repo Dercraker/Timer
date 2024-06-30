@@ -24,11 +24,13 @@ import { useMemo } from 'react';
 export type TimerCardProps = {
   timer: TimerSchema;
   onClick?: () => void;
+  onComplete: () => void;
 };
 
 export const TimerCard = ({
   timer: { id, isRunning, duration, endAt, name, timeLeft },
   onClick,
+  onComplete,
 }: TimerCardProps) => {
   const leftDuration = useMemo(
     () => moment.duration(timeLeft, 'milliseconds'),
@@ -44,6 +46,8 @@ export const TimerCard = ({
   const StartTimer = useTimerStore((s) => s.StartTimer);
   const ReloadEndAt = useTimerStore((s) => s.ReloadEndAt);
   const RestartTimer = useTimerStore((s) => s.RestartTimer);
+
+  if (timeLeft === 1000) onComplete();
 
   return (
     <Paper

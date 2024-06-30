@@ -62,21 +62,24 @@ export const useTimerStore = create<TimerStore>()(
     TickTimers() {
       set((state) => ({
         timers: state.timers.map((timer) => {
-          const currentTime = moment();
-          const isTimeLeft = timer.timeLeft !== 0;
-          // const isNotEnded = moment(timer.endAt + 1).isAfter(currentTime);
+          const isTimeLeft = timer.timeLeft >= 0;
           const shouldContinue = timer.isRunning && isTimeLeft;
-          // const shouldContinue = timer.isRunning && isTimeLeft && isNotEnded;
 
           return shouldContinue
             ? {
                 ...timer,
                 timeLeft: timer.timeLeft - 1000,
               }
-            : {
-                ...timer,
-                isRunning: false,
-              };
+            : timer.timeLeft < 0
+              ? {
+                  ...timer,
+                  timeLeft: 0,
+                  isRunning: false,
+                }
+              : {
+                  ...timer,
+                  isRunning: false,
+                };
         }),
       }));
     },

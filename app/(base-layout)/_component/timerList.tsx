@@ -3,7 +3,7 @@
 import { useTimerStore } from '@/store/timerStore';
 import { Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TimerCard } from './timerCard';
 import { TimerModal } from './timerModal';
 
@@ -36,6 +36,8 @@ export const TimerList = ({}: TimerListProps) => {
     openTimerModal();
   };
 
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   return (
     <>
       <Group align="center" justify="center">
@@ -44,9 +46,19 @@ export const TimerList = ({}: TimerListProps) => {
             key={timer.id}
             timer={timer}
             onClick={() => handleOpenModal(timer.id)}
+            onComplete={() => {
+              console.log('aaaaaaa');
+              audioRef.current?.play();
+              setTimeout(() => audioRef.current?.pause(), 3000);
+            }}
           />
         ))}
       </Group>
+      <audio
+        ref={audioRef}
+        src="/assets/clock-alarm-8761.mp3"
+        preload="auto"
+      ></audio>
       <TimerModal
         opened={timerModalOpened}
         close={closeTimerModal}

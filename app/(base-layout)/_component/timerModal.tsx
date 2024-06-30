@@ -143,10 +143,10 @@ export const TimerModal = ({ opened, close, timerId }: TimerModalProps) => {
               </CountdownCircleTimer>
             </Group>
             <Group justify="center">
+              <ChangeTimerName timerId={id} timerName={name} />
               <Button variant="outline" disabled leftSection={<IconVolume />}>
                 Change sound
               </Button>
-              <ChangeTimerName timerId={id} timerName={name} />
             </Group>
             <Group>
               <Button variant="outline" disabled leftSection={<IconShare />}>
