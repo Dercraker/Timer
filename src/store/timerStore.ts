@@ -64,8 +64,9 @@ export const useTimerStore = create<TimerStore>()(
         timers: state.timers.map((timer) => {
           const currentTime = moment();
           const isTimeLeft = timer.timeLeft !== 0;
-          const isNotEnded = moment(timer.endAt + 1).isAfter(currentTime);
-          const shouldContinue = timer.isRunning && isTimeLeft && isNotEnded;
+          // const isNotEnded = moment(timer.endAt + 1).isAfter(currentTime);
+          const shouldContinue = timer.isRunning && isTimeLeft;
+          // const shouldContinue = timer.isRunning && isTimeLeft && isNotEnded;
 
           return shouldContinue
             ? {
@@ -118,7 +119,7 @@ export const useTimerStore = create<TimerStore>()(
     ReloadEndAt(timerId) {
       set((state) => ({
         timers: state.timers.map((timer) => {
-          if (timer.id === timerId) {
+          if (timer.id === timerId && timer.timeLeft !== 0) {
             return {
               ...timer,
               endAt: moment()

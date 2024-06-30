@@ -1,7 +1,7 @@
 'use client';
 
 import { useTimerStore } from '@/store/timerStore';
-import { Button, Group, NumberInput, Stack } from '@mantine/core';
+import { Button, Group, NumberInput, Stack, useMatches } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconTrashX } from '@tabler/icons-react';
 import { zodResolver } from 'mantine-form-zod-resolver';
@@ -12,6 +12,12 @@ import { TimerInputSchema } from './timerInput.schema';
 export type MainTimerProps = {};
 
 export const MainTimer = ({}: MainTimerProps) => {
+  const canGrow = useMatches({
+    base: true,
+    xs: true,
+    sm: false,
+  });
+
   const timerForm = useForm<TimerInputSchema>({
     mode: 'controlled',
     initialValues: {
@@ -56,7 +62,7 @@ export const MainTimer = ({}: MainTimerProps) => {
   return (
     <Group justify="center">
       <Stack>
-        <Group pb="xs">
+        <Group pb="xs" justify="center">
           <NumberInput
             label={timerForm.values.hour > 0 ? 'Hours' : 'Hour'}
             min={0}
@@ -111,7 +117,7 @@ export const MainTimer = ({}: MainTimerProps) => {
             }
           />
         </Group>
-        <Group>
+        <Group grow={canGrow}>
           <Button
             disabled={!canClearMany()}
             fullWidth

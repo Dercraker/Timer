@@ -54,6 +54,7 @@ export const TimerCard = ({
       className="cursor-pointer select-none hover:bg-mantine-color-default-hover"
       onClick={onClick}
       onMouseOver={() => (!isRunning ? ReloadEndAt(id) : null)}
+      w="18.75em"
     >
       <Stack>
         <Title order={3} ta="center" td="underline">
