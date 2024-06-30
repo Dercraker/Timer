@@ -19,7 +19,7 @@ export const BaseHeader = ({ size, fluid }: BaseHeaderProps) => {
             td="inherit"
             c="inherit"
           >
-            <SiteName />
+            <SiteName nameVisibleFrom="base" />
           </Box>
           <Group>{/* <SwitchThemeIcon /> */}</Group>
         </Group>
