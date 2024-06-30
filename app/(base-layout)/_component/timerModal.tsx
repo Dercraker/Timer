@@ -10,14 +10,10 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import {
-  IconCursorText,
-  IconShare,
-  IconVolume,
-  IconX,
-} from '@tabler/icons-react';
+import { IconShare, IconVolume, IconX } from '@tabler/icons-react';
 import moment from 'moment';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { ChangeTimerName } from './changeTimerName';
 
 export type TimerModalProps = {
   opened: boolean;
@@ -32,7 +28,8 @@ export const TimerModal = ({ opened, close, timerId }: TimerModalProps) => {
   const currentTimer = GetTimer(timerId);
 
   if (!currentTimer) {
-    return close();
+    close();
+    return <></>;
   }
   const { duration, endAt, id, isRunning, name, timeLeft } = currentTimer;
 
@@ -149,13 +146,7 @@ export const TimerModal = ({ opened, close, timerId }: TimerModalProps) => {
               <Button variant="outline" disabled leftSection={<IconVolume />}>
                 Change sound
               </Button>
-              <Button
-                variant="outline"
-                disabled
-                leftSection={<IconCursorText />}
-              >
-                Change Name
-              </Button>
+              <ChangeTimerName timerId={id} timerName={name} />
             </Group>
             <Group>
               <Button variant="outline" disabled leftSection={<IconShare />}>

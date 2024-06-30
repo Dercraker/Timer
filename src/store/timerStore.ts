@@ -16,6 +16,8 @@ type TimerStore = {
   StartTimer: (timerId: string) => void;
   ReloadEndAt: (timerId: string) => void;
   RestartTimer: (timerId: string) => void;
+
+  ChangeName: (timerId: string, newName: string) => void;
 };
 
 const timerMiddlewares = (f: StateCreator<TimerStore>) =>
@@ -128,6 +130,17 @@ export const useTimerStore = create<TimerStore>()(
                 .toDate()
                 .getTime(),
             };
+          }
+          return timer;
+        }),
+      }));
+    },
+
+    ChangeName(timerId, newName) {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          if (timer.id === timerId) {
+            return { ...timer, name: newName };
           }
           return timer;
         }),

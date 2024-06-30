@@ -45,7 +45,7 @@ export const TimerList = ({}: TimerListProps) => {
       <TimerModal
         opened={timerModalOpened}
         close={closeTimerModal}
-        timerId={selectedTimer as string}
+        timerId={selectedTimer!}
       />
     </>
   );
