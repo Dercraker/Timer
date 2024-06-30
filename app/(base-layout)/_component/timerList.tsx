@@ -12,10 +12,15 @@ export type TimerListProps = {};
 export const TimerList = ({}: TimerListProps) => {
   const allTimers = useTimerStore((s) => s.timers);
   const TickTimers = useTimerStore((s) => s.TickTimers);
+  const CalculateAllRealTimeLeft = useTimerStore(
+    (s) => s.CalculateAllRealTimeLeft
+  );
 
   const [selectedTimer, setSelectedTimer] = useState<string | null>(null);
   const [timerModalOpened, { open: openTimerModal, close: closeTimerModal }] =
     useDisclosure(false);
+
+  useEffect(() => CalculateAllRealTimeLeft(), []);
 
   useEffect(() => {
     const internalClock = setInterval(() => {

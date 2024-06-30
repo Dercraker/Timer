@@ -14,6 +14,7 @@ type TimerStore = {
   TickTimers: () => void;
   PauseTimer: (timerId: string) => void;
   StartTimer: (timerId: string) => void;
+  CalculateAllRealTimeLeft: () => void;
   ReloadEndAt: (timerId: string) => void;
   RestartTimer: (timerId: string) => void;
 
@@ -97,6 +98,19 @@ export const useTimerStore = create<TimerStore>()(
             return { ...timer, isRunning: true };
           }
           return timer;
+        }),
+      }));
+    },
+
+    CalculateAllRealTimeLeft() {
+      set((state) => ({
+        timers: state.timers.map((timer) => {
+          const currentTime = moment();
+          const timeLeft = moment(timer.endAt).diff(
+            currentTime,
+            'milliseconds'
+          );
+          return { ...timer, timeLeft };
         }),
       }));
     },
